@@ -1,9 +1,12 @@
 const express = require("express");
+const dotenv = require("dotenv");
 const multer = require("multer");
 const cors = require("cors");
 const reader = require("xlsx");
 const fs = require("fs");
+const PORT = process.env.PORT || 5000;
 
+dotenv.config();
 const app = express();
 const upload = multer({ dest: "uploads/" });
 
@@ -89,6 +92,9 @@ app.post("/upload", upload.single("file"), (req, res) => {
       const workbook = reader.utils.book_new();
       reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
+      // const outputPath = "/tmp/output.xlsx";
+      // reader.writeFile(workbook, outputPath);
+
       const outputPath = "uploads/output.xlsx";
       reader.writeFile(workbook, outputPath);
 
@@ -106,4 +112,6 @@ app.post("/upload", upload.single("file"), (req, res) => {
    }
 });
 
-app.listen(5000, () => console.log("Server started on http://localhost:5000"));
+app.listen(PORT, () =>
+   console.log(`Server started on http://localhost:${PORT}`)
+);
