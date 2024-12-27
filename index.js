@@ -10,18 +10,16 @@ dotenv.config();
 const app = express();
 const upload = multer({ dest: "uploads/" });
 
-app.use(cors());
-app.use(cors({ origin: "http://localhost:5173" }));
 app.use(
    cors({
-      origin: ["http://localhost:5173"],
+      origin: ["http://localhost:5173", "https://json-to-excel-frontend-901wufhy1.vercel.app/"],
       methods: ["GET", "POST"],
       credentials: true,
    })
 );
 app.use(express.json());
 
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("https://json-to-excel-backend-j3nn5n1gt-gaurav-joshis-projects-1f07293c.vercel.app/upload", upload.single("file"), (req, res) => {
    const file = req.file;
 
    if (!file) {
