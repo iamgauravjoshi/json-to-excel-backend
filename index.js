@@ -17,7 +17,7 @@ app.use(
          "https://json-to-excel-frontend-901wufhy1.vercel.app",
       ],
       methods: ["GET", "POST"],
-      credentials: true,
+      credentials: true, // Allows sending cookies
    })
 );
 
@@ -31,8 +31,10 @@ app.post("/upload", upload.single("file"), (req, res) => {
    }
 
    try {
+      // Read the uploaded JSON file
       const jsonData = JSON.parse(fs.readFileSync(file.path, "utf-8"));
 
+      // Perform the conversion logic
       const tempData = jsonData.map((company) => {
          return {
             name: company.summary.name,
@@ -57,6 +59,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
                const solutionContent = r.content.find(
                   (c) => c.label === "SOLUTION"
                );
+               // console.log('Solution Content:', solutionContent);
                return {
                   category: r.project.allCategories.join(", "),
                   description: r.project.description,
@@ -65,6 +68,8 @@ app.post("/upload", upload.single("file"), (req, res) => {
                      name: r.reviewer.name,
                      location: r.reviewer.location,
                   },
+                  // solution: r.content.find((c) => c.label === "SOLUTION").text
+                  // solution: solutionContent ? solutionContent.text.split(" ") : []
                   solution: solutionContent.text
                      .replaceAll("?", "? \n")
                      .replaceAll("Why", "\n Why")
@@ -100,8 +105,11 @@ app.post("/upload", upload.single("file"), (req, res) => {
       const outputPath = "uploads/output.xlsx";
       reader.writeFile(workbook, outputPath);
 
+      // Send the Excel file to the user
       res.download(outputPath, "ConvertedFile.xlsx", (err) => {
          if (err) console.error(err);
+
+         // Clean up files
          fs.unlinkSync(file.path);
          fs.unlinkSync(outputPath);
       });
