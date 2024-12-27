@@ -4,22 +4,26 @@ const multer = require("multer");
 const cors = require("cors");
 const reader = require("xlsx");
 const fs = require("fs");
-const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 const app = express();
 const upload = multer({ dest: "uploads/" });
+const PORT = 5000;
 
 app.use(
    cors({
-      origin: ["http://localhost:5173", "https://json-to-excel-frontend-901wufhy1.vercel.app/"],
+      origin: [
+         "http://localhost:5173",
+         "https://json-to-excel-frontend-901wufhy1.vercel.app/",
+      ],
       methods: ["GET", "POST"],
-      credentials: true,
+      credentials: true, // Allows sending cookies
    })
 );
+
 app.use(express.json());
 
-app.post("https://json-to-excel-backend-j3nn5n1gt-gaurav-joshis-projects-1f07293c.vercel.app/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.single("file"), (req, res) => {
    const file = req.file;
 
    if (!file) {
