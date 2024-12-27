@@ -14,7 +14,7 @@ app.use(
    cors({
       origin: [
          "http://localhost:5173",
-         "https://json-to-excel-frontend-901wufhy1.vercel.app",
+         "https://json-to-excel-frontend-bamtb8a3e.vercel.app",
       ],
       methods: ["GET", "POST"],
       credentials: true, // Allows sending cookies
