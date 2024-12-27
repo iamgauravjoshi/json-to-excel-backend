@@ -92,11 +92,11 @@ app.post("/upload", upload.single("file"), (req, res) => {
       const workbook = reader.utils.book_new();
       reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-      // const outputPath = "/tmp/output.xlsx";
-      // reader.writeFile(workbook, outputPath);
-
-      const outputPath = "uploads/output.xlsx";
+      const outputPath = "/tmp/output.xlsx";
       reader.writeFile(workbook, outputPath);
+
+      // const outputPath = "uploads/output.xlsx";
+      // reader.writeFile(workbook, outputPath);
 
       // Send the Excel file to the user
       res.download(outputPath, "ConvertedFile.xlsx", (err) => {
