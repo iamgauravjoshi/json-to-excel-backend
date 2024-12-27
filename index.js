@@ -10,20 +10,41 @@ const app = express();
 const upload = multer({ dest: "uploads/" });
 const PORT = 5000;
 
+// app.use(
+//    cors({
+//       origin: [
+//          "http://localhost:5173",
+//          "https://json-to-excel-frontend-901wufhy1.vercel.app",
+//       ],
+//       methods: ["GET", "POST"],
+//       credentials: true, // Allows sending cookies
+//    })
+// );
+
 app.use(
    cors({
-      origin: [
-         "http://localhost:5173",
-         "https://json-to-excel-frontend-901wufhy1.vercel.app/",
-      ],
+      origin: (origin, callback) => {
+         console.log("Incoming Origin:", origin);
+         if (
+            !origin || // Allow non-browser requests
+            [
+               "http://localhost:5173",
+               "https://json-to-excel-frontend-901wufhy1.vercel.app",
+            ].includes(origin)
+         ) {
+            callback(null, true);
+         } else {
+            callback(new Error("Not allowed by CORS"));
+         }
+      },
       methods: ["GET", "POST"],
-      credentials: true, // Allows sending cookies
+      credentials: true,
    })
 );
 
 app.use(express.json());
 
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/api/upload", upload.single("file"), (req, res) => {
    const file = req.file;
 
    if (!file) {
@@ -101,9 +122,6 @@ app.post("/upload", upload.single("file"), (req, res) => {
       const worksheet = reader.utils.json_to_sheet(data);
       const workbook = reader.utils.book_new();
       reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-      // const outputPath = "/tmp/output.xlsx";
-      // reader.writeFile(workbook, outputPath);
 
       const outputPath = "uploads/output.xlsx";
       reader.writeFile(workbook, outputPath);
