@@ -23,20 +23,10 @@ const PORT = 5000;
 
 app.use(
    cors({
-      origin: (origin, callback) => {
-         console.log("Incoming Origin:", origin);
-         if (
-            !origin || // Allow non-browser requests
-            [
-               "http://localhost:5173",
-               "https://json-to-excel-frontend-901wufhy1.vercel.app",
-            ].includes(origin)
-         ) {
-            callback(null, true);
-         } else {
-            callback(new Error("Not allowed by CORS"));
-         }
-      },
+      origin: [
+         "http://localhost:5173",
+         "https://json-to-excel-frontend-901wufhy1.vercel.app",
+      ],
       methods: ["GET", "POST"],
       credentials: true,
    })
